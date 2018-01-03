@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> listUserByClassId(BigInteger classId, String numBeginWith, String nameBeginWith) throws ClazzNotFoundException {
         try{
-            List<User> users = userMapper.listUserByClassId(BigInteger.valueOf(1), numBeginWith, nameBeginWith);
+            List<User> users = userMapper.listUserByClassId(classId, numBeginWith, nameBeginWith);
             return users;
         }catch (Exception e){
             System.out.println(e.toString());
