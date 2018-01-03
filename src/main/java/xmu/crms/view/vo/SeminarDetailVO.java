@@ -19,7 +19,8 @@ public class SeminarDetailVO {
 		this.name = seminar.getName();
 		this.startTime = simpleDateFormat.format(seminar.getStartTime());
 		this.endTime = simpleDateFormat.format(seminar.getEndTime());
-
+		this.teacherName=seminar.getCourse().getTeacher().getName();
+		this.teacherEmail=seminar.getCourse().getTeacher().getEmail();
 	}
 
 	public SeminarDetailVO(int id, String name,

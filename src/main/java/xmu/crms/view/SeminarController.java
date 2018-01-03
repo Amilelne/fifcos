@@ -13,9 +13,11 @@ import xmu.crms.entity.*;
 import xmu.crms.exception.GroupNotFoundException;
 import xmu.crms.exception.SeminarNotFoundException;
 import xmu.crms.exception.TopicNotFoundException;
+import xmu.crms.service.GradeService;
 import xmu.crms.service.SeminarGroupService;
 import xmu.crms.service.SeminarService;
 import xmu.crms.service.TopicService;
+import xmu.crms.service.impl.GradeServiceImpl;
 import xmu.crms.service.impl.SeminarServiceImpl;
 import xmu.crms.view.vo.*;
 
@@ -43,6 +45,9 @@ public class SeminarController {
 
 	@Autowired
 	SeminarGroupService seminarGroupService;
+
+	@Autowired
+	GradeServiceImpl gradeService;
 
 	@PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
 	@RequestMapping(value = "/{seminarId}", method = GET)
@@ -190,6 +195,78 @@ public class SeminarController {
 			return ResponseEntity.status(404).build();
 		}
 	}
+
+	@PreAuthorize("hasRole('STUDENT')")
+	@RequestMapping(value = "/{seminarId}/gradegroup/mygroup/{groupId}", method = GET)
+	@ResponseBody
+	public ResponseEntity getGradeGroupBySeminarId(@PathVariable int seminarId,@PathVariable int groupId) {
+
+//		try {
+//			List<SeminarGroup> seminarGroups = seminarGroupService.listSeminarGroupBySeminarId(BigInteger.valueOf(seminarId));
+//			List<SeminarGradeVO> seminarGradeVOS = new ArrayList<SeminarGradeVO>();
+//			for (SeminarGroup seminarGroup : seminarGroups) {
+//				List<SeminarGroupTopic> seminarGroupTopics = topicService.listSeminarGroupTopicByGroupId(seminarGroup.getId());
+//				System.out.println(seminarGroupTopics);
+//				for (SeminarGroupTopic seminarGroupTopic : seminarGroupTopics) {
+//					Topic topic = topicService.getTopicByTopicId(seminarGroupTopic.getTopic().getId());
+//					SeminarGradeVO seminarGradeVO = new SeminarGradeVO(seminarGroup, topic);
+//					seminarGradeVOS.add(seminarGradeVO);
+//				}
+//			}
+//			return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON_UTF8).body(seminarGradeVOS);
+//		} catch (SeminarNotFoundException e) {
+//			e.printStackTrace();
+//			return ResponseEntity.status(404).build();
+//		} catch (TopicNotFoundException e) {
+//			e.printStackTrace();
+//			return ResponseEntity.status(404).build();
+//		}
+		//
+		BigInteger userId = (BigInteger) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		try {
+			SeminarGroup myGroup=seminarGroupService.getSeminarGroupByGroupId(BigInteger.valueOf(groupId));
+			if(myGroup!=null){//如果我的小组存在
+				//查询选择的topics
+				List<SeminarGroupTopic> myTopics=topicService.listSeminarGroupTopicByGroupId(BigInteger.valueOf(groupId));
+				if(myTopics==null){
+					return ResponseEntity.status(204).build();//没有选择话题的话不能打分：打分的前提：你已经展示完了或者快要展示
+				}
+				//查询全部topics
+				List<Topic> allTopics=topicService.listTopicBySeminarId(BigInteger.valueOf(seminarId));
+				if(allTopics==null){
+					return ResponseEntity.status(204).build();//seminar底下连话题都没有更加不能打分啦
+				}
+				//需要打分的topics
+				List<Topic> gradeTopics=new ArrayList<Topic>();
+				for(Topic topic:allTopics){
+					for(SeminarGroupTopic mtopic:myTopics){
+						if(mtopic.getTopic().getId()!=topic.getId()){
+							gradeTopics.add(topic);
+						}
+					}
+				}
+				//获取每个topic下的小组的信息
+				List<GroupUserGradeVO> gradeGroups=new ArrayList<GroupUserGradeVO>();
+				for(Topic gradeTopic:gradeTopics){
+					List<SeminarGroup> seminarGroups=seminarGroupService.listGroupByTopicId(gradeTopic.getId());
+					for(SeminarGroup seminarGroup:seminarGroups){
+						Integer grade=gradeService.getGradeByGroupIdAndTopicIdAndStudentId(seminarGroup.getId(),gradeTopic.getId(),userId);
+						gradeGroups.add(new GroupUserGradeVO(seminarGroup,gradeTopic,grade));
+					}
+				}
+				return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON_UTF8).body(gradeGroups);
+			}else{
+				return ResponseEntity.status(204).build();//还没组队更加不能打分啦
+			}
+		} catch (TopicNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(404).build();
+		} catch (GroupNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(404).build();
+		}
+	}
+
 
 	@PreAuthorize("hasRole('STUDENT')")
 	@RequestMapping(value = "/{seminarId}/group/my", method = GET)

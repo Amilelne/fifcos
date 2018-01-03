@@ -190,4 +190,12 @@ public interface GradeMapper {
      */
     String getSeminarNameBySeminarId(BigInteger seminarId);           //按courseId获取所有讨论课成绩
 
+    /**
+     * 学生打分相关方法.
+     * 获取某个学生对某个队伍的某个话题的打分.
+     * @param groupId      小组ID
+     * @param topicId      话题ID
+     * @param studentId    学生用户ID
+     */
+    Integer getGradeByGroupIdAndTopicIdAndStudentId(BigInteger groupId,BigInteger topicId,BigInteger studentId);
 }

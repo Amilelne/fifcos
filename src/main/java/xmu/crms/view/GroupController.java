@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -273,6 +274,21 @@ public class GroupController {
 						BigInteger.valueOf(studentId), BigInteger.valueOf(groupId),
 						BigInteger.valueOf(presentation.getGrade()));
 			}
+			return ResponseEntity.status(204).build();
+		} catch (GroupNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(404).build();
+		}
+	}
+
+	@PreAuthorize("hasRole('STUDENT')")
+	@RequestMapping(value = "/{groupId}/Topic/{topicId}/grade/presentation", method = GET)
+	@ResponseBody
+	public ResponseEntity getGradeByGroupIdAndTopicId(@PathVariable int groupId,@PathVariable int topicId) {//获取某个学生给某个队伍某个topic的打分
+		BigInteger userId = (BigInteger) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		try {
+			SeminarGroup seminarGroup = gradeService.getSeminarGroupBySeminarGroupId(BigInteger.valueOf(groupId));
+			//gradeService
 			return ResponseEntity.status(204).build();
 		} catch (GroupNotFoundException e) {
 			e.printStackTrace();

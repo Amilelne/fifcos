@@ -106,4 +106,13 @@ public class GradeServiceImpl implements GradeService {
             gradeMapper.updateFinalGrade(seminarGroupId, grade);
         }
     }
+
+    @Override
+    public Integer getGradeByGroupIdAndTopicIdAndStudentId(BigInteger groupId, BigInteger topicId, BigInteger studentId) {
+        Integer grade=gradeMapper.getGradeByGroupIdAndTopicIdAndStudentId(groupId, topicId, studentId);
+        if(grade==null){
+            grade = new Integer("0");
+        }
+        return grade;
+    }
 }
