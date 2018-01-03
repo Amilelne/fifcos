@@ -110,7 +110,7 @@ public class GradeServiceImpl implements GradeService {
     public Integer getGradeByGroupIdAndTopicIdAndStudentId(BigInteger groupId, BigInteger topicId, BigInteger studentId) {
         Integer grade=gradeMapper.getGradeByGroupIdAndTopicIdAndStudentId(groupId, topicId, studentId);
         if(grade==null){
-            grade = new Integer("0");
+            grade = new Integer("-1");
         }
         return grade;
     }

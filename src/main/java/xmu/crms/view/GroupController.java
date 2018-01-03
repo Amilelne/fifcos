@@ -274,6 +274,7 @@ public class GroupController {
 //						BigInteger.valueOf(studentId), BigInteger.valueOf(groupId),
 //						BigInteger.valueOf(presentation.getGrade()));
 //			}
+
 			gradeService.insertGroupGradeByUserId(BigInteger.valueOf(presentationGrade.getTopicId()),
 						BigInteger.valueOf(studentId), BigInteger.valueOf(groupId),
 						BigInteger.valueOf(presentationGrade.getGrade()));
