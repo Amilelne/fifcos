@@ -79,7 +79,8 @@ public class UserController {
 
 				User user = new User(o);
 				String password = MD5Utils.MD5encode((String)user.getPassword());
-				//System.out.println("password:"+password.toString());
+				System.out.println("wholeStr"+wholeStr);
+				System.out.println(user);
 				System.out.println("password:"+password);
 				user.setPassword(password);
 				userService.updateUserByUserId(id, user);

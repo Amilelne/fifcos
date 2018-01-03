@@ -206,17 +206,18 @@ public class AttendanceController {
                     break;
                 }
             }
-            String attend = "";
-            if (attendance.getAttendanceStatus() == 0) {
-                attend = "present";
-            }
-            else if (attendance.getAttendanceStatus() == 1) {
-                attend = "late";
-            }else {
-                attend = "absence";
-            }
+//            String attend = "";
+//            if (attendance.getAttendanceStatus() == 0) {
+//                attend = "present";
+//            }
+//            else if (attendance.getAttendanceStatus() == 1) {
+//                attend = "late";
+//            }else {
+//                attend = "absence";
+//            }
             Map<String, String> status = new HashMap<String, String>();
-            status.put("status", attend);
+            //status.put("status", attend);
+            status.put("status", "success");
             return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON_UTF8).body(status);
         } catch (LocationNotFoundException e) {
             e.printStackTrace();
