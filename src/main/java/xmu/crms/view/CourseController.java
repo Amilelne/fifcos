@@ -251,7 +251,7 @@ public class CourseController {
 		}
 	}
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
     @RequestMapping(value = "/{courseId}/teacher/seminar", method = GET)
     @ResponseBody
     public ResponseEntity getSeminarsByCourseId(@PathVariable int courseId) throws IllegalArgumentException{
