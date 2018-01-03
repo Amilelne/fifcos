@@ -4,6 +4,10 @@ public class PresentationGradeVO {
     private int topicId;
     private int grade;
 
+    public PresentationGradeVO(){
+
+    }
+
     public PresentationGradeVO(int topicId, int grade) {
         this.topicId = topicId;
         this.grade = grade;

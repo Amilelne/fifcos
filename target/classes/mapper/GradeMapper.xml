@@ -205,7 +205,7 @@
         where seminar_group_topic_id in (select id from seminar_group_topic where seminar_group_id = #{seminarGroupId})
     </select>
 
-    <select id="getGradeByGroupIdAndTopicIdAndStudentId">
+    <select id="getGradeByGroupIdAndTopicIdAndStudentId" resultType="Integer">
         select grade from student_score_group
         where seminar_group_topic_id in (select id from seminar_group_topic where seminar_group_id = #{groupId} and topic_id = #{topicId})
         and student_id=#{studentId}

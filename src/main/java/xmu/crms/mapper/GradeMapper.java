@@ -197,5 +197,5 @@ public interface GradeMapper {
      * @param topicId      话题ID
      * @param studentId    学生用户ID
      */
-    Integer getGradeByGroupIdAndTopicIdAndStudentId(BigInteger groupId,BigInteger topicId,BigInteger studentId);
+    Integer getGradeByGroupIdAndTopicIdAndStudentId(@Param("groupId") BigInteger groupId,@Param("topicId")BigInteger topicId,@Param("studentId")BigInteger studentId);
 }

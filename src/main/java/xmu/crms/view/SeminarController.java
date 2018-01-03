@@ -47,7 +47,7 @@ public class SeminarController {
 	SeminarGroupService seminarGroupService;
 
 	@Autowired
-	GradeServiceImpl gradeService;
+	GradeService gradeService;
 
 	@PreAuthorize("hasRole('TEACHER') or hasRole('STUDENT')")
 	@RequestMapping(value = "/{seminarId}", method = GET)
@@ -249,9 +249,15 @@ public class SeminarController {
 				List<GroupUserGradeVO> gradeGroups=new ArrayList<GroupUserGradeVO>();
 				for(Topic gradeTopic:gradeTopics){
 					List<SeminarGroup> seminarGroups=seminarGroupService.listGroupByTopicId(gradeTopic.getId());
+					System.out.println(seminarGroups);
 					for(SeminarGroup seminarGroup:seminarGroups){
-						Integer grade=gradeService.getGradeByGroupIdAndTopicIdAndStudentId(seminarGroup.getId(),gradeTopic.getId(),userId);
-						gradeGroups.add(new GroupUserGradeVO(seminarGroup,gradeTopic,grade));
+						if(seminarGroup!=null){
+							BigInteger groupIdTemp=seminarGroup.getId();
+							BigInteger topicIdTemp=gradeTopic.getId();
+							Integer grade=gradeService.getGradeByGroupIdAndTopicIdAndStudentId(groupIdTemp,topicIdTemp,userId);
+							gradeGroups.add(new GroupUserGradeVO(seminarGroup,gradeTopic,grade));
+						}
+
 					}
 				}
 				return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON_UTF8).body(gradeGroups);

@@ -23,7 +23,6 @@ import java.util.List;
  */
 
 @Service("GradeService")
-@Component
 public class GradeServiceImpl implements GradeService {
 
     @Autowired(required = false)

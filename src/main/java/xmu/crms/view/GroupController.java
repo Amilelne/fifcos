@@ -266,14 +266,17 @@ public class GroupController {
 	@RequestMapping(value = "/{groupId}/grade/presentation/{studentId}", method = PUT)
 	@ResponseBody
 	public ResponseEntity submitGradeByGroupId(@PathVariable int groupId, @PathVariable int studentId,
-											   @RequestBody List<PresentationGradeVO> presentationGrade) {
+											   @RequestBody PresentationGradeVO presentationGrade) {
 		try {
 			SeminarGroup seminarGroup = gradeService.getSeminarGroupBySeminarGroupId(BigInteger.valueOf(groupId));
-			for (PresentationGradeVO presentation : presentationGrade) {
-				gradeService.insertGroupGradeByUserId(BigInteger.valueOf(presentation.getTopicId()),
+//			for (PresentationGradeVO presentation : presentationGrade) {
+//				gradeService.insertGroupGradeByUserId(BigInteger.valueOf(presentation.getTopicId()),
+//						BigInteger.valueOf(studentId), BigInteger.valueOf(groupId),
+//						BigInteger.valueOf(presentation.getGrade()));
+//			}
+			gradeService.insertGroupGradeByUserId(BigInteger.valueOf(presentationGrade.getTopicId()),
 						BigInteger.valueOf(studentId), BigInteger.valueOf(groupId),
-						BigInteger.valueOf(presentation.getGrade()));
-			}
+						BigInteger.valueOf(presentationGrade.getGrade()));
 			return ResponseEntity.status(204).build();
 		} catch (GroupNotFoundException e) {
 			e.printStackTrace();
